@@ -1,3 +1,16 @@
+# Fork Readme
+
+This fork is focusing on optimizations for Windows 3.1 and touch screen interaction. These experiments could possibly break other features in this repository.
+
+## Devcontainer
+
+I wanted to run the docker container on Apple Silicon (arm64) (amd64 with Rosetta was a bit slow) and made the following dependency replacements:
+
+- libc6-dev-i386-cross -> libc6-dev-arm64-cross
+- libc6-dev-i386 -> libc6-dev
+
+# Original Readme
+
 [![Join the chat at https://gitter.im/copy/v86](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/copy/v86) or #v86 on [irc.libera.chat](https://libera.chat/)
 
 v86 emulates an x86-compatible CPU and hardware. Machine code is translated to
