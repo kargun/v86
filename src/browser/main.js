@@ -2008,27 +2008,35 @@
             emulator.screen_go_fullscreen();
         };
 
-        $("screen_container").onclick = function()
-        {
-            if(mouse_is_enabled && os_uses_mouse)
-            {
-                emulator.lock_mouse();
-            }
-            else
-            {
-                // allow text selection
-                if(window.getSelection().isCollapsed)
-                {
-                    let phone_keyboard = document.getElementsByClassName("phone_keyboard")[0];
+        $("screen_container").addEventListener(
+            "pointerdown",
+            (event) => {
+                if (event.pointerType === "mouse" && document.pointerLockElement === null) {
+                    if(mouse_is_enabled && os_uses_mouse)
+                    {
+                        emulator.lock_mouse();
+                    }
+                    else
+                    {
+                        // allow text selection
+                        if(window.getSelection().isCollapsed)
+                        {
+                            let phone_keyboard = document.getElementsByClassName("phone_keyboard")[0];
 
-                    // stop mobile browser from scrolling into view when the keyboard is shown
-                    phone_keyboard.style.top = document.body.scrollTop + 100 + "px";
-                    phone_keyboard.style.left = document.body.scrollLeft + 100 + "px";
+                            // stop mobile browser from scrolling into view when the keyboard is shown
+                            phone_keyboard.style.top = document.body.scrollTop + 100 + "px";
+                            phone_keyboard.style.left = document.body.scrollLeft + 100 + "px";
 
+                            phone_keyboard.focus();
+                        }
+                    }
+                    event.preventDefault();
+                } else {
                     phone_keyboard.focus();
                 }
-            }
-        };
+            },
+            false,
+        );
 
         const phone_keyboard = document.getElementsByClassName("phone_keyboard")[0];
 
