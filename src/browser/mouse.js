@@ -10,7 +10,9 @@ import { BusConnector } from "../bus.js";
  */
 export function MouseAdapter(bus, screen_container)
 {
-    const SPEED_FACTOR = 1;
+    const SPEED_FACTOR = 0.15;
+    const TOUCH_SHORT_PRESS_TIME = 100;
+    const TOUCH_LONG_PRESS_TIME = 1000;
 
     var left_down = false,
         right_down = false,
@@ -18,6 +20,9 @@ export function MouseAdapter(bus, screen_container)
 
         last_x = 0,
         last_y = 0,
+
+        touch_short_press_timer,
+        touch_long_press_timer,
 
         mouse = this;
 
@@ -134,20 +139,50 @@ export function MouseAdapter(bus, screen_container)
                 last_x = touch.clientX;
                 last_y = touch.clientY;
             }
+
+            // 1. Simulate a mouse left click down (true) on a "short press".
+            //    This type of event needs to be delayed a short time to allow a
+            //    succeeding move to cancel it. This is useful when for example the
+            //    pointer is above an icon or button and we want to initiate a move
+            //    away from it without clicking it.
+            touch_short_press_timer = setTimeout(touch_left_click, TOUCH_SHORT_PRESS_TIME, true);
+            // 2. Always simulate a left up (false) after a short amount of time.
+            //    The delay is necessary for the send mouse-click to have effect.
+            //    If this is due to cpu cycles there might be a cleaner way to wait.
+            setTimeout(touch_left_click, TOUCH_SHORT_PRESS_TIME + 10, false);
+            // 3. Start a long press timer to simulate another left click down event
+            //    after the timeout is reached - if not cancelled by succeeding touch
+            //    move or up.
+            touch_long_press_timer = setTimeout(touch_left_click, TOUCH_LONG_PRESS_TIME, true);
         }
     }
 
     function touch_end_handler(e)
     {
+        // Stop long press timer
+        if (touch_long_press_timer)
+            clearTimeout(touch_long_press_timer);
+
         if(left_down || middle_down || right_down)
         {
             mouse.bus.send("mouse-click", [false, false, false]);
             left_down = middle_down = right_down = false;
         }
+
+        // Prevent succeeding mouse events
+        e.preventDefault();
     }
 
     function mousemove_handler(e)
     {
+        // Stop short press timer
+        if (touch_short_press_timer)
+            clearTimeout(touch_short_press_timer);
+
+        // Stop long press timer
+        if (touch_long_press_timer)
+            clearTimeout(touch_long_press_timer);
+
         if(!mouse.bus)
         {
             return;
@@ -299,4 +334,12 @@ export function MouseAdapter(bus, screen_container)
         mouse.bus.send("mouse-wheel", [delta_x, delta_y]);
         e.preventDefault();
     }
+
+    function touch_left_click(down)
+    {
+        mouse.bus.send("mouse-click", [down, false, false]);
+        left_down = down;
+        middle_down = right_down = false;
+    }
+
 }

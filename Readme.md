@@ -9,6 +9,14 @@ I wanted to run the docker container on Apple Silicon (arm64) (amd64 with Rosett
 - libc6-dev-i386-cross -> libc6-dev-arm64-cross
 - libc6-dev-i386 -> libc6-dev
 
+## Touch interaction modifications to MouseAdapter
+
+Simulated mouse clicks with delays (using `setTimeout`) have been introduced in the touch events handler to address the following issues:
+
+1. In the original implementation, a left button mouse click is not released as expected when the touch ends. This has various consequences but the most problematic is that text input is blocked while the mouse button is down.
+2. Use long press to drag and drop (move windows, icons, etc.) and for text selection.
+3. Make it possible to move the mouse pointer away from a target without clicking it.
+
 # Original Readme
 
 [![Join the chat at https://gitter.im/copy/v86](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/copy/v86) or #v86 on [irc.libera.chat](https://libera.chat/)
