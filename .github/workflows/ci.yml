@@ -2,8 +2,10 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
+    tags:
+      - 'v*'
   pull_request:
 
 jobs:
@@ -140,19 +142,19 @@ jobs:
     name: Upload release
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
 
     permissions:
       id-token: write
       contents: write
 
     steps:
-      - name: Delete old release and tag
-        uses: dev-drprasad/delete-tag-and-release@v1.0.1
-        with:
-          delete_release: true
-          tag_name: latest
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete old release and tag
+      #   uses: dev-drprasad/delete-tag-and-release@v1.0.1
+      #   with:
+      #     delete_release: true
+      #     tag_name: latest
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get artifacts
         uses: actions/download-artifact@v4
@@ -170,8 +172,8 @@ jobs:
       - name: Release to GitHub
         uses: ncipollo/release-action@v1
         with:
-          name: Latest Release
-          tag: latest
+          name: Release ${{ github.ref }}
+          tag: ${{ github.ref }}
           commit: master
           body: ${{ github.event.head_commit.message }}
           artifacts: "build/libv86*.js,build/libv86*.js.map,build/*.mjs,build/v86*.wasm"
