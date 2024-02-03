@@ -2,8 +2,10 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
+    tags:
+      - 'v*'
   pull_request:
 
 jobs:
@@ -55,7 +57,7 @@ jobs:
         run: make rustfmt
 
       - name: Fetch kvm-unit-test cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-kvm-unit-test
         with:
           path: tests/kvm-unit-tests/
@@ -69,7 +71,7 @@ jobs:
         run: tests/kvm-unit-tests/run.js tests/kvm-unit-tests/x86/realmode.flat
 
       - name: Fetch namsmtests cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-nasmtests
         with:
           path: tests/nasm/build/
@@ -85,7 +87,7 @@ jobs:
         run: make rust-test
 
       - name: Fetch image cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-images
         with:
           path: images/
@@ -117,7 +119,7 @@ jobs:
         run: make expect-tests
 
       - name: Upload the artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: v86
           path: |
@@ -129,18 +131,18 @@ jobs:
     name: Upload release
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
 
     steps:
-      - name: Delete old release and tag
-        uses: dev-drprasad/delete-tag-and-release@v1.0.1
-        with:
-          delete_release: true
-          tag_name: latest
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete old release and tag
+      #   uses: dev-drprasad/delete-tag-and-release@v1.0.1
+      #   with:
+      #     delete_release: true
+      #     tag_name: latest
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: v86
           path: build
@@ -151,8 +153,8 @@ jobs:
       - name: Release to GitHub
         uses: ncipollo/release-action@v1
         with:
-          name: Latest Release
-          tag: latest
+          name: Release ${{ github.ref }}
+          tag: ${{ github.ref }}
           commit: master
           body: ${{ github.event.head_commit.message }}
           artifacts: "build/libv86*.js,build/libv86*.js.map,build/v86*.wasm"
