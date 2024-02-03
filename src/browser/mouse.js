@@ -157,30 +157,24 @@ function MouseAdapter(bus, screen_container)
 
     function touch_end_handler(e)
     {
-        // Stop long press timer
-        if (touch_long_press_timer)
-            clearTimeout(touch_long_press_timer);
+        if (may_handle(e)) {
+            // Stop long press timer
+            if (touch_long_press_timer)
+                clearTimeout(touch_long_press_timer);
 
-        if(left_down || middle_down || right_down)
-        {
-            mouse.bus.send("mouse-click", [false, false, false]);
-            left_down = middle_down = right_down = false;
+            if(left_down || middle_down || right_down)
+            {
+                mouse.bus.send("mouse-click", [false, false, false]);
+                left_down = middle_down = right_down = false;
+            }
+
+            // Prevent succeeding mouse events
+            e.preventDefault();
         }
-
-        // Prevent succeeding mouse events
-        e.preventDefault();
     }
 
     function mousemove_handler(e)
     {
-        // Stop short press timer
-        if (touch_short_press_timer)
-            clearTimeout(touch_short_press_timer);
-
-        // Stop long press timer
-        if (touch_long_press_timer)
-            clearTimeout(touch_long_press_timer);
-
         if(!mouse.bus)
         {
             return;
@@ -195,6 +189,14 @@ function MouseAdapter(bus, screen_container)
         {
             return;
         }
+
+        // Stop short press timer
+        if (touch_short_press_timer)
+            clearTimeout(touch_short_press_timer);
+
+        // Stop long press timer
+        if (touch_long_press_timer)
+            clearTimeout(touch_long_press_timer);
 
         var delta_x = 0;
         var delta_y = 0;
