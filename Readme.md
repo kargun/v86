@@ -17,6 +17,10 @@ Simulated mouse clicks with delays (using `setTimeout`) have been introduced in 
 2. Use long press to drag and drop (move windows, icons, etc.) and for text selection.
 3. Make it possible to move the mouse pointer away from a target without clicking it.
 
+## Workaround for Safari "bug" causing document body offset on fullscreen exit
+
+In Safari desktop the document body will be misaligned on exit fullscreen when mouse lock is requested immediately after entering element fullscreen mode. As a workaround, a small delay (500 ms) is applied to the lock mouse function if a Safari (desktop) browser is detected.
+
 # Original Readme
 
 [![Join the chat at https://gitter.im/copy/v86](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/copy/v86) or #v86 on [irc.libera.chat](https://libera.chat/)
