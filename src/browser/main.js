@@ -2270,7 +2270,7 @@
         $("screen_container").addEventListener(
             "pointerdown",
             (event) => {
-                if (event.pointerType === "mouse" && document.pointerLockElement === null) {
+                if(event.pointerType === "mouse" && document.pointerLockElement === null) {
                     if(mouse_is_enabled && os_uses_mouse)
                     {
                         emulator.lock_mouse();

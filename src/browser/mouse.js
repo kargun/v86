@@ -157,9 +157,9 @@ function MouseAdapter(bus, screen_container)
 
     function touch_end_handler(e)
     {
-        if (may_handle(e)) {
+        if(may_handle(e)) {
             // Stop long press timer
-            if (touch_long_press_timer)
+            if(touch_long_press_timer)
                 clearTimeout(touch_long_press_timer);
 
             if(left_down || middle_down || right_down)
@@ -191,11 +191,11 @@ function MouseAdapter(bus, screen_container)
         }
 
         // Stop short press timer
-        if (touch_short_press_timer)
+        if(touch_short_press_timer)
             clearTimeout(touch_short_press_timer);
 
         // Stop long press timer
-        if (touch_long_press_timer)
+        if(touch_long_press_timer)
             clearTimeout(touch_long_press_timer);
 
         var delta_x = 0;

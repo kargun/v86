@@ -1081,7 +1081,7 @@ V86.prototype.screen_go_fullscreen = function()
         navigator.keyboard.lock();
     } catch(e) {}
 
-    if (window.safari !== undefined) {
+    if(window.safari !== undefined) {
         // In Safari desktop the document body will be misaligned on exit fullscreen
         // if mouse lock is requested immediately after enter fullscreen.
         // A small delay seems to be a workaround.
