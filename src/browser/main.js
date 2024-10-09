@@ -2727,7 +2727,7 @@ function init_ui(profile, settings, emulator)
     $("screen_container").addEventListener(
         "pointerdown",
         (event) => {
-            if (event.pointerType === "mouse" && document.pointerLockElement === null) {
+            if(event.pointerType === "mouse" && document.pointerLockElement === null) {
                 if(emulator.is_running() && emulator.speaker_adapter && emulator.speaker_adapter.audio_context.state === "suspended")
                 {
                     emulator.speaker_adapter.audio_context.resume();
