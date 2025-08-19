@@ -10,7 +10,7 @@ import { BusConnector } from "../bus.js";
  */
 export function MouseAdapter(bus, screen_container)
 {
-    const SPEED_FACTOR = 0.15;
+    const SPEED_FACTOR = 0.4;
     const TOUCH_SHORT_PRESS_TIME = 100;
     const TOUCH_LONG_PRESS_TIME = 1000;
 
